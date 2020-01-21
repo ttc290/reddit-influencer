@@ -33,9 +33,7 @@ The directory structure for the repo should look like this:
     ├── frontend
     │   └── frontend.py
     ├── ingestion
-    │   ├── worker1_to_s3.sh
-    │   ├── worker2_to_s3.sh
-    │   └── worker3_to_s3.sh
+    │   └── ingest.sh
     ├── postgres
     |   └── result.sql
     └── spark
