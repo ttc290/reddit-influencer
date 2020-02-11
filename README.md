@@ -35,7 +35,15 @@ The directory structure for the repo should look like this:
     ├── ingestion
     │   └── ingest.sh
     ├── postgres
-    |   └── result.sql
+    │   └── result.sql
     └── spark
-        └── preprocess.scala
+        ├── built.sbt
+        ├── src
+        │   └── main
+        │       └── scala
+        │           └── etl.scala
+        └── target
+            └── scala-2.11
+                ├── etl_2.11-1.0.jar
+                └── postgresql-42.2.9.jar
         
