@@ -4,38 +4,31 @@
 1. [Problem](README.md#problem)
 1. [The approach](README.md#the-approach)
 1. [Expected output](README.md#expected-output)
-1. [How to run the program](README.md#how-to-run-the-program)
 1. [Repo directory structure](README.md#repo-directory-structure)
 
 ## Problem
 
-For each brand and product, I want to identify the 10 most influential Reddit users based on the number of positive upvotes on comments mentioning the product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of users for each product with the total number of upvotes for the last week, last month, last year, and all the time (since Dec 2005).
+Reddit is one of the biggest social media platforms with a wide range of topics such as technology, fashion, politics. With 330M monthly active users, Reddit has the potential to influence the image of a company in the eyes of the public. However, actively promoting for a brand or product on the platform is generally not received well within the community. I would like to identify the core members within each community and provide a way for company to grow its influence from the inside.
 
 ## The approach
 
-
+For each brand and product, I want to identify the 10 most influential Reddit users based on the score of comments mentioning the brand and product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of users for each product with the highest score and the score graph of all users associated with the product during the chosen month.
 
 ## Expected output
 
-
-
-## How to run the program
-
-
+Output is the table of top 10 Reddit users ranked by their aggregated total scores for comments associated with the company's brand and product during the month. There is also a score graph of all users during the same month.
 
 ## Repo directory structure
 
 The directory structure for the repo should look like this:
 
     ├── README.md
-    ├── airflow
-    │   └── scheduler.py
     ├── frontend
     │   └── frontend.py
     ├── ingestion
     │   └── ingest.sh
     ├── postgres
-    │   └── result.sql
+    │   └── brand_product.csv
     └── spark
         ├── built.sbt
         ├── src
