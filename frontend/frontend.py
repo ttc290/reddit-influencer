@@ -11,7 +11,7 @@ import psycopg2
 
 app = dash.Dash(__name__)
 
-# drop down options
+# drop down options - temporary fix
 brand = ['Amazon', 'Apple', 'Dell', 'Fitbit', 'GoPro', 'HP', 'Samsung']
 product = ['Kindle', 'Fire TV', 'Echo Dot', 'iPhone', 'iPad', 'iPod', 'Apple TV', 'iMac', 'Apple Watch', 'AirPods', 'MacBook', 'Inspiron', 'Flex 2', 'Hero 7', 'Pavilion', 'S10']
 year = [2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006]
@@ -79,7 +79,7 @@ def bar_graph(brand_value, product_value, year_value, month_value):
     try:
         # ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com is the PostgreSQL server
         connection = psycopg2.connect(
-            host='ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com', database='reddit', user='ubuntu')
+            host='ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com', database='xxxxxx', user='xxxxxx')
     except Exception as e:
         sys.exit('error', e)
     
@@ -116,7 +116,7 @@ def reddit_table(brand_value, product_value, year_value, month_value):
     # create connection from web server to database
     try:
         # ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com is the PostgreSQL server
-        connection = psycopg2.connect(host='ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com', database='reddit', user='ubuntu')
+        connection = psycopg2.connect(host='ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com', database='xxxxxx', user='xxxxxx')
     except Exception as e:
         sys.exit('error', e)
     

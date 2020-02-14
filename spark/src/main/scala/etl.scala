@@ -50,7 +50,7 @@ object etl {
 		// JDBC prop
 		val prop = new java.util.Properties
 		prop.setProperty("driver", "org.postgresql.Driver")
-		prop.setProperty("user", "ubuntu")		
+		prop.setProperty("user", "xxxxxx")		
 
 		// ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com is the PostgreSQL server
 		// reddit is the database name
@@ -71,7 +71,7 @@ object etl {
 		// JDBC prop
 		val prop = new java.util.Properties
 		prop.setProperty("driver", "org.postgresql.Driver")
-		prop.setProperty("user", "ubuntu")		
+		prop.setProperty("user", "xxxxxx")		
 
 		// ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com is the PostgreSQL server
 		// reddit is the database name
@@ -121,19 +121,19 @@ object etl {
 			StructField("ups", LongType, true)))
 
 		// load raw data
-		val sampleDF = spark.read.schema(custom_schema).json("s3a://reddit-tc")
+		val rawDF = spark.read.schema(custom_schema).json("s3a://reddit-tc")
 		
 		// clean raw data
-		val cleanDF = preprocess(sampleDF)
+		val cleanDF = preprocess(rawDF)
 
 		// read brand and product from database
 		val brandProductDF = readFromDB("brand_product")
 
 		// scan 'body' column in cleanDF for brand and product in each row of brandProductDF and join the 2 tables
-		val workingDF = cleanDF.join(brandProductDF, col("body").contains(col("brand")) && col("body").contains(col("product")))
+		val filterJoinDF = cleanDF.join(brandProductDF, col("body").contains(col("brand")) && col("body").contains(col("product")))
 
 		// analyze the data
-		val output = analyze(workingDF).persist()
+		val output = analyze(filterJoinDF).persist()
 		
 		// save result to Postgres
 		writeToDB(output, "reddit_users_tuning")
