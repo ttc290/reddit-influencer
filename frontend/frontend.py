@@ -85,7 +85,7 @@ def bar_graph(brand_value, product_value, year_value, month_value):
     
     cursor = connection.cursor()
     # query to populate the graph
-    query = ("SELECT author, score FROM reddit_users_tuning WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC" % (year_value, month_value, brand_value, product_value))
+    query = ("SELECT author, score FROM reddit_users_tuning_indexed WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC" % (year_value, month_value, brand_value, product_value))
     cursor.execute(query)
     rows = cursor.fetchall()
 
@@ -122,7 +122,7 @@ def reddit_table(brand_value, product_value, year_value, month_value):
     
     cursor = connection.cursor()
     # query to populate the table
-    query = ("SELECT author, score FROM reddit_users_tuning WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
+    query = ("SELECT author, score FROM reddit_users_tuning_indexed WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
     cursor.execute(query)
     rows = cursor.fetchall()
 

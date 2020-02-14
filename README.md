@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [Problem](README.md#problem)
 1. [The approach](README.md#the-approach)
-1. [Expected output](README.md#expected-output)
+1. [Pipeline](README.md#pipeline)
 1. [Repo directory structure](README.md#repo-directory-structure)
 
 ## Problem
@@ -14,9 +14,9 @@ Reddit is one of the biggest social media platforms with a wide range of topics 
 
 For each brand and product, I want to identify the 10 most influential Reddit users based on the score of comments mentioning the brand and product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of users for each product with the highest score and the score graph of all users associated with the product during the chosen month.
 
-## Expected output
+## Pipeline
 
-Output is the table of top 10 Reddit users ranked by their aggregated total scores for comments associated with the company's brand and product during the month. There is also a score graph of all users during the same month.
+![pipeline](assets/pipeline.png)
 
 ## Repo directory structure
 
