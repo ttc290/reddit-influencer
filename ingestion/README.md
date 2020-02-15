@@ -1,3 +1,9 @@
+## Data ingestion
+
+![ingestion](assets/ingestion.png)
+
+Data ingestion is controlled by the `ingest.sh` shell script
+
 ## How to execute the shell script
 
 1. Copy the script from local to one of the workers using Pegasus:
