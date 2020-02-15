@@ -1,6 +1,6 @@
 ## Data ingestion
 
-![ingestion](~/assets/ingestion.png)
+![ingestion](../assets/ingestion.png)
 
 Data ingestion is controlled by the `ingest.sh` shell script
 
