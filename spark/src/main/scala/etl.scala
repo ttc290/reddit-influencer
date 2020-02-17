@@ -53,9 +53,9 @@ object etl {
 		prop.setProperty("user", "xxxxxx")		
 
 		// ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com is the PostgreSQL server
-		// reddit is the database name
+		// xxxxxx is the database name
 		val destination = "ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com"
-		val dbName = "reddit"
+		val dbName = "xxxxxx"
 		val url = s"jdbc:postgresql://$destination:5432/$dbName"
 
 		// write result to PostgreSQL
@@ -74,9 +74,9 @@ object etl {
 		prop.setProperty("user", "xxxxxx")		
 
 		// ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com is the PostgreSQL server
-		// reddit is the database name
+		// xxxxxx is the database name
 		val destination = "ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com"
-		val dbName = "reddit"
+		val dbName = "xxxxxx"
 		val url = s"jdbc:postgresql://$destination:5432/$dbName"
 
 		// table name
