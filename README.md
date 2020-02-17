@@ -10,11 +10,11 @@
 
 ## Problem
 
-Reddit is one of the biggest social media platforms with a wide range of topics such as technology, fashion, politics. With 330M monthly active users, Reddit has the potential to influence the image of a company in the eyes of the public. However, actively promoting for a brand or product on the platform is generally not received well within the community. I would like to identify the core members within each community and provide a way for company to grow its influence from the inside.
+Reddit is one of the biggest social media platforms with a wide range of topics such as technology, fashion, politics. With 430M monthly active users, Reddit has the potential to influence the image of a company in the eyes of the public. However, actively promoting for a brand or product on the platform is generally not received well within the community. I would like to identify the core members within each community and provide a way for company to grow its influence from the inside.
 
 ## Product
 
-For each brand and product, I want to identify the 10 most influential Reddit users based on the score of comments mentioning the brand and product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of users for each product with the highest score and the score graph of all users associated with the product during the chosen month.
+For each brand and product, I want to identify the 10 most influential Reddit users based on the score of comments mentioning the brand and product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of top 10 users with the highest aggregated score for each product and a graph showing the distribution of score for the product during the chosen month.
 
 ## Pipeline
 
