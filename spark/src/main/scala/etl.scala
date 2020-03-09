@@ -1,5 +1,4 @@
-// spark-shell --jars /home/ubuntu/reddit-influencer/spark/target/scala-2.11/postgresql-42.2.9.jar
-// spark-submit --class etl --num-executors 3 --executor-cores 6 --executor-memory 6G --master spark://<master-node-ip>:7077 --packages com.johnsnowlabs.nlp:spark-nlp_2.11:2.4.2 --jars /home/ubuntu/reddit-influencer/spark/target/scala-2.11/postgresql-42.2.9.jar /home/ubuntu/reddit-influencer/spark/target/scala-2.11/etl_2.11-1.0.jar
+// spark-submit --class etl --num-executors 3 --executor-cores 6 --executor-memory 6G --master spark://<master-node-ip>:7077 --packages com.johnsnowlabs.nlp:spark-nlp_2.11:2.4.2 --jars spark/target/scala-2.11/postgresql-42.2.9.jar spark/target/scala-2.11/etl_2.11-1.0.jar
 
 import com.johnsnowlabs.nlp.pretrained.PretrainedPipeline
 import com.johnsnowlabs.nlp.SparkNLP
