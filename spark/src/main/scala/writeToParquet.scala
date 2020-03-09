@@ -1,5 +1,4 @@
-// spark-shell --jars ~/postgresql-42.2.9.jar
-// spark-submit --class writeToParquet --master spark://ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com:7077 /home/ubuntu/Insight/target/scala-2.11/etl_2.11-1.0.jar
+// spark-submit --class writeToParquet --master spark://<master-node-ip>:7077 spark/target/scala-2.11/etl_2.11-1.0.jar
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.DataFrame

@@ -14,7 +14,7 @@ Reddit is one of the biggest social media platforms with a wide range of topics 
 
 ## Product
 
-For each brand and product, I want to identify the 10 most influential Reddit users based on the score of comments mentioning the brand and product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of top 10 users with the highest aggregated score for each product and a graph showing the distribution of score for the product during the chosen month.
+For each brand and product, I want to identify the 10 most influential Reddit users based on the score of comments mentioning the brand and product. I believe the result would be useful for marketers (especially in small companies) as they can try to include these users into their marketing campaign. MVP is the list of top 10 users with the highest aggregated score for each product, a graph showing the distribution of score for the product during the chosen month, and a table containing the top 20 influencers's actual comment, the score it received on Reddit, and the sentiment analysis.
 
 ## Pipeline
 
@@ -38,15 +38,20 @@ The directory structure for the repo looks like this:
     ├── ingestion
     │   └── ingest.sh
     ├── postgres
+    │   ├── master_table.sql
     │   └── brand_product.csv
     └── spark
         ├── built.sbt
         ├── src
         │   └── main
         │       └── scala
-        │           └── etl.scala
+        │           ├── etl.scala
+        │           └── writeToParquet.scala
         └── target
             └── scala-2.11
                 ├── etl_2.11-1.0.jar
-                └── postgresql-42.2.9.jar
+                ├── postgresql-42.2.9.jar
+                └── spark_nlp
+                    └── sentiment_analysis
+                        └── analyze_sentiment_en_2.4.0_2.4_1580483464667.zip
         
