@@ -41,7 +41,7 @@ object etl {
 		val finalDF = subredditDF.select(col("year"), col("month"), col("author"), col("body").alias("text"), col("score"), col("brand"), col("product"))
 		
 		finalDF
-	}	
+	}
 
 	def aggScore (df: DataFrame): DataFrame = {
 		// aggregate user's scores

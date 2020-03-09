@@ -60,9 +60,10 @@ app.layout = html.Div(children=[
                 columns=[
                 {'name': 'Author', 'id': 'author'},
                 {'name': 'Top Comment', 'id': 'comment'},
+                {'name': 'Sentiment', 'id': 'sentiment'},
                 {'name': 'Score', 'id': 'score'}],
                 data=[
-                {'author': i, 'comment': i, 'score': i} for i in range(10)],
+                {'author': i, 'comment': i, 'sentiment': i, 'score': i} for i in range(20)],
                 style_header={'backgroundColor': 'yellow', 'fontWeight': 'bold'},
                 style_cell={'textAlign': 'left', 'font_size': '15px', 'height': 'auto', 'whiteSpace': 'normal'}
             )
@@ -196,11 +197,11 @@ def comment_table(brand_value, product_value, year_value, month_value):
         sys.exit('error', e)
     
     cursor = connection.cursor()
-    query = ("SELECT author, maxScore, body FROM master_table WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
+    query = ("SELECT author, maxScore, body, sentiment FROM master_table WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
     cursor.execute(query)
     rows = cursor.fetchall()
 
-    labels = ['author', 'score', 'comment']
+    labels = ['author', 'score', 'comment', 'sentiment']
     df = pd.DataFrame.from_records(rows, columns=labels)
     
     cursor.close()
