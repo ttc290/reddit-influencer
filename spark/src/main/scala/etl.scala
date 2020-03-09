@@ -1,8 +1,11 @@
 // spark-shell --jars /home/ubuntu/reddit-influencer/spark/target/scala-2.11/postgresql-42.2.9.jar
-// spark-submit --class etl --num-executors 3 --executor-cores 6 --executor-memory 6G --master spark://<master-node-ip>:7077 --jars /home/ubuntu/reddit-influencer/spark/target/scala-2.11/postgresql-42.2.9.jar /home/ubuntu/reddit-influencer/spark/target/scala-2.11/etl_2.11-1.0.jar
+// spark-submit --class etl --num-executors 3 --executor-cores 6 --executor-memory 6G --master spark://<master-node-ip>:7077 --packages com.johnsnowlabs.nlp:spark-nlp_2.11:2.4.2 --jars /home/ubuntu/reddit-influencer/spark/target/scala-2.11/postgresql-42.2.9.jar /home/ubuntu/reddit-influencer/spark/target/scala-2.11/etl_2.11-1.0.jar
 
+import com.johnsnowlabs.nlp.pretrained.PretrainedPipeline
+import com.johnsnowlabs.nlp.SparkNLP
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
 import java.util.Properties
@@ -30,20 +33,46 @@ object etl {
 		positiveCommentDF
 	}
 
-	def analyze (df: DataFrame): DataFrame = {
+	def filterByBrandProduct (df: DataFrame): DataFrame = {
 		// only search for comments in relevant subreddits
 		val subredditDF = df.filter(col("subreddit") isin ("gadgets", "technology", lower(regexp_replace(col("brand"), " ", "")), lower(regexp_replace(col("product"), " ", ""))))
 
 		// keep relevant columns for final result
-		val finalDF = subredditDF.select(col("year"), col("month"), col("author"), col("score"), col("brand"), col("product"))
-
-		// aggregate user's net-score (upvotes - downvotes)
-		val aggScoreDF = finalDF.groupBy("year", "month", "author", "brand", "product").sum("score").withColumnRenamed("sum(score)", "score")
+		val finalDF = subredditDF.select(col("year"), col("month"), col("author"), col("body").alias("text"), col("score"), col("brand"), col("product"))
 		
-		// convert output to Dataframe
-		val output = aggScoreDF.toDF()
+		finalDF
+	}
 
-		output
+	def aggScore (df: DataFrame): DataFrame = {
+		// aggregate user's scores
+		val aggScoreDF = df.groupBy("year", "month", "author", "brand", "product").sum("score").withColumnRenamed("sum(score)", "score")
+		
+		aggScoreDF
+	}
+
+	def highestScore (df: DataFrame): DataFrame = {
+		// define partition columns
+		val maxScoreWindow = Window.partitionBy("year", "month", "author", "brand", "product")
+
+		// get user's comment with highest score
+		val highScoreCommentDF = df.withColumn("maxScore", max("score").over(maxScoreWindow)).filter(col("maxScore") === col("score")).drop("score").withColumnRenamed("maxScore", "score")
+
+		// load pre-trained Sentiment Analysis pipeline
+		val sentiment_analysis = PretrainedPipeline.fromDisk("reddit-influencer/spark/target/scala-2.11/spark_nlp/sentiment_analysis")
+
+		// analyze sentiment of each word in the 'text' column
+		val sentiment = sentiment_analysis.transform(highScoreCommentDF)
+
+		// counts of sentiment (positive, negative)
+		val sentiment_expode = sentiment.select(col("year"), col("month"), col("author"), col("brand"), col("product"), col("score"), col("text"), explode(col("sentiment.result")).as("sentiment_result")).groupBy("year", "month", "author", "brand", "product", "score", "text", "sentiment_result").count
+		
+		// define partition columns
+		val aggSentimentWindow = Window.partitionBy("year", "month", "author", "brand", "product", "score", "text")
+		
+		// define overall sentiment from sentiment's count (max)
+		val commentSentimentDF = sentiment_expode.withColumn("maxCount", max("count").over(aggSentimentWindow)).filter(col("maxCount") === col("count")).drop("maxCount", "count")
+
+		commentSentimentDF
 	}
 
 	def writeToDB (df: DataFrame, tableName: String) = {
@@ -121,7 +150,7 @@ object etl {
 			StructField("ups", LongType, true)))
 
 		// load raw data
-		val rawDF = spark.read.schema(custom_schema).json("s3a://reddit-tc")
+		val rawDF = spark.read.schema(custom_schema).parquet("s3a://reddit-tc-parquet/reddit.parquet/")
 		
 		// clean raw data
 		val cleanDF = preprocess(rawDF)
@@ -132,14 +161,20 @@ object etl {
 		// scan 'body' column in cleanDF for brand and product in each row of brandProductDF and join the 2 tables
 		val filterJoinDF = cleanDF.join(brandProductDF, col("body").contains(col("brand")) && col("body").contains(col("product")))
 
-		// analyze the data
-		val output = analyze(filterJoinDF).persist()
+		// filter comments containing brands and products
+		val finalDF = filterByBrandProduct(filterJoinDF).persist()
+
+		// table of user's aggregated score
+		val scoreDF = aggScore(finalDF).persist()
+
+		// table of user's comment with highest score
+		val commentDF = highestScore(finalDF).persist()
 		
-		// save result to Postgres
-		writeToDB(output, "reddit_users_tuning")
+		// save resulting tables to Postgres
+		writeToDB(scoreDF, "reddit_users_score")
+		writeToDB(commentDF, "reddit_users_comment")
 
 		// stop spark applicaiton
 		spark.stop()
 	}
 }
-
