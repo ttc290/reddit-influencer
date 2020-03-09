@@ -43,17 +43,30 @@ app.layout = html.Div(children=[
                 id='table',
                 columns=[
                 {'name': 'Author', 'id': 'author'},
-                {'name': 'Link', 'id': 'link'},
-                {'name': 'Score', 'id': 'score'}],
+                {'name': 'User\'s Profile', 'id': 'link'},
+                {'name': 'Total Score', 'id': 'score'}],
                 data=[
                 {'author': i, 'link': i, 'score': i} for i in range(10)],
                 style_header={'backgroundColor': 'yellow', 'fontWeight': 'bold'},
-                style_cell={'textAlign': 'left', 'textOverflow': 'ellipsis', 'font_size': '15px'}
+                style_cell={'textAlign': 'left', 'font_size': '15px', 'height': 'auto', 'whiteSpace': 'normal'}
             )
         ],style={'width':'49%','display':'inline-block', 'vertical-align': 'middle'}),
         html.Div([
             dcc.Graph(id='graph') 
-        ],style={'width':'100%','display':'inline-block'}),
+        ],style={'width':'100%','display':'inline-block', "margin-bottom": "16px"}),
+        html.Div([
+            dash_table.DataTable(
+                id='comment_table',
+                columns=[
+                {'name': 'Author', 'id': 'author'},
+                {'name': 'Top Comment', 'id': 'comment'},
+                {'name': 'Score', 'id': 'score'}],
+                data=[
+                {'author': i, 'comment': i, 'score': i} for i in range(10)],
+                style_header={'backgroundColor': 'yellow', 'fontWeight': 'bold'},
+                style_cell={'textAlign': 'left', 'font_size': '15px', 'height': 'auto', 'whiteSpace': 'normal'}
+            )
+        ],style={'width':'90%','display':'inline-block', 'vertical-align': 'left'}),
     ])
 
 # database connection configurations
@@ -116,7 +129,7 @@ def update_graph_bar(brand_value, product_value, year_value, month_value):
         sys.exit('error', e)
     
     cursor = connection.cursor()
-    query = ("SELECT author, score FROM reddit_users_tuning_indexed WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC" % (year_value, month_value, brand_value, product_value))
+    query = ("SELECT author, score FROM reddit_users_score WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC" % (year_value, month_value, brand_value, product_value))
     cursor.execute(query)
     rows = cursor.fetchall()
 
@@ -154,7 +167,7 @@ def reddit_table(brand_value, product_value, year_value, month_value):
         sys.exit('error', e)
     
     cursor = connection.cursor()
-    query = ("SELECT author, score FROM reddit_users_tuning_indexed WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
+    query = ("SELECT author, score FROM reddit_users_score WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
     cursor.execute(query)
     rows = cursor.fetchall()
 
@@ -163,6 +176,33 @@ def reddit_table(brand_value, product_value, year_value, month_value):
     df['link'] = 'https://www.reddit.com/user/' + df['author']
     df = df[['author', 'link', 'score']]
 
+    cursor.close()
+    connection.close()
+
+    return df.to_dict(orient='records')
+
+# populate top users' comment
+@app.callback(Output('comment_table', 'data'),
+    [
+        Input(component_id='brands', component_property='value'),
+        Input(component_id='products', component_property='value'),
+        Input(component_id='years', component_property='value'),
+        Input(component_id='months', component_property='value')
+    ])
+def comment_table(brand_value, product_value, year_value, month_value):
+    try:
+        connection = psycopg2.connect(**db)
+    except Exception as e:
+        sys.exit('error', e)
+    
+    cursor = connection.cursor()
+    query = ("SELECT author, maxScore, body FROM master_table WHERE year = %d AND month = %d AND brand = '%s' AND product = '%s' ORDER BY score DESC LIMIT 10" % (year_value, month_value, brand_value, product_value))
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    labels = ['author', 'score', 'comment']
+    df = pd.DataFrame.from_records(rows, columns=labels)
+    
     cursor.close()
     connection.close()
 
