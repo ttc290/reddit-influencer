@@ -53,5 +53,7 @@ The directory structure for the repo looks like this:
                 ├── postgresql-42.2.9.jar
                 └── spark_nlp
                     └── sentiment_analysis
-                        └── analyze_sentiment_en_2.4.0_2.4_1580483464667.zip
+                        ├── analyze_sentiment_en_2.4.0_2.4_1580483464667.zip
+                        ├── metadata
+                        └── stages
         
