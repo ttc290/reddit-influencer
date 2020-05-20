@@ -26,7 +26,7 @@ Historical [Reddit comments](https://files.pushshift.io/reddit/comments/) data f
 
 ## Website demo
 
-The website demo is available [here](http://insightful-analytics.me/)
+The demo of my website is available [here](https://docs.google.com/presentation/d/1OfRYBL6OzWgkNSOk91TAJqgqacim33wetHT6XGg8Sko/edit#slide=id.g6eb65c63bd_2_2)
 
 ## Repo directory structure
 
